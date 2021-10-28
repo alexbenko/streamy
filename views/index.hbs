@@ -1,0 +1,16 @@
+{{#expect availableShows }}
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Streamey</title>
+  <link rel="icon" type="image/svg" href="/favicon.svg">
+</head>
+<div style="display: flex; flex-direction:column; justify-content:space-evenly">
+  {{#each availableShows as show}}
+  <div>
+    <a href="/show/{{show}}" target="_blank" rel="noopener noreferrer" style="text-decoration: none;">
+      {{ show }}
+    </a>
+  </div>
+  {{/each}}
+</div>

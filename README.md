@@ -1,2 +1,2 @@
-# streamy
-simple nodejs video streaming
+# streamey
+simple nodejs streaming server
