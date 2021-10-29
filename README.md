@@ -11,5 +11,5 @@ simple nodejs streaming server
 
 <p>
   In the shows directory follow this layout. showname/season_#/e_#
-  Example: rickandmorty/season_1/e_1
 </p>
+<p>  Example: rickandmorty/season_1/e_1</p>
