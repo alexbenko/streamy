@@ -13,3 +13,4 @@ simple nodejs streaming server. Should work on any browser. Let me know if it do
   In the shows directory follow this layout. showname/season_#/e_#
 </p>
 <p>  Example: rickandmorty/season_1/e_1</p>
+<p>Right now it only supports videos in .mp4 format.</p>
