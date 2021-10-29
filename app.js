@@ -3,7 +3,6 @@ const path = require("path");
 const morgan = require('morgan');
 const helmet = require("helmet");
 const {compile} = require('tempura')
-const {readFile, readdir} = require('fs/promises');
 const fs = require("fs");
 
 const app = express();
@@ -14,7 +13,7 @@ app.use(morgan('dev'));
 app.use(express.static(path.join(__dirname, './static')))
 
 const renderPage = async (templatePath, params) =>{
-  const template = await readFile(templatePath, 'utf8')
+  const template = await fs.readFileSync(templatePath, 'utf8')
   const render = compile(template)
 
   return (render(params))
@@ -28,12 +27,12 @@ app.get("/show/:showName", async (req,res) =>{
   //TODO: set up a redis cache so this doesn't have to be done on every request
   const { showName } = req.params;
   const showPath = path.join(__dirname, `./shows/${showName}`);
-  const seasons = await readdir(showPath);
+  const seasons = await fs.readdirSync(showPath);
   const cleanedSeasons = seasons.filter(season => season !== '.DS_Store');
   const seasonsAndEpsiodes = [];
   for (const season of cleanedSeasons){
     const episodesInSeasonPath = path.join(__dirname, `./shows/${showName}/${season}`)
-    const episodesInSeason = await readdir(episodesInSeasonPath);
+    const episodesInSeason = await fs.readdirSync(episodesInSeasonPath);
 
     const cleanedEpisodes = episodesInSeason.filter(episode => episode !== '.DS_Store');
 
@@ -70,6 +69,7 @@ app.get("/shows/:showName/:season/:episode", async (req, res) => {
   const filePath = `/shows/${showName}/${season}/${episode}`;
   const range = req.headers.range
   const options = {};
+  let end = undefined
   if (range) {
     const bytesPrefix = "bytes=";
     if (range.startsWith(bytesPrefix)) {
@@ -82,7 +82,8 @@ app.get("/shows/:showName/:season/:episode", async (req, res) => {
             }
             const rangeEnd = parts[1] && parts[1].trim();
             if (rangeEnd && rangeEnd.length > 0) {
-                options.end = end = parseInt(rangeEnd);
+                end = parseInt(rangeEnd);
+                options.end = end
             }
         }
     }
@@ -149,7 +150,7 @@ app.get("/shows/:showName/:season/:episode", async (req, res) => {
 
 app.get("/", async (req,res) => {
   const showsPath = path.join(__dirname, './shows');
-  const shows = await readdir(showsPath);
+  const shows = await fs.readdirSync(showsPath);
   const cleaned = shows.filter(show => show !== '.DS_Store')
   const templateParams = {
     availableShows : cleaned,
