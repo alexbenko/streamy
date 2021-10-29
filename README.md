@@ -6,4 +6,5 @@ simple nodejs streaming server
   <li>Clone the repository: <code>git clone https://github.com/alexbenko/streamy.git</code></li>
   <li><code>cd streamy</code></li>
   <li><code>npm install</code></li>
+  <li><code>mkdir shows</code></li>
 </ol>
