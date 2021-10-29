@@ -1,5 +1,5 @@
 # streamey
-simple nodejs streaming server
+simple nodejs streaming server. Should work on any browser. Let me know if it doesn't!
 
 <ol>  Steps to set up:
   <li>Ensure nodejs and npm is installed</li>
