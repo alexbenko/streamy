@@ -4,12 +4,28 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Streamey</title>
   <link rel="icon" type="image/svg" href="/favicon.svg">
+  <style>
+    .show_card{
+      box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
+      transition: 0.3s;
+      margin-right: .5rem;
+    }
+    .show_card:hover {
+      box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2);
+    }
+    .container {
+      padding: 2px 16px;
+    }
+  </style>
 </head>
-<div style="display: flex; flex-direction:column; justify-content:space-evenly">
+<div style="display: flex;">
   {{#each availableShows as show}}
-  <div>
+  <div class="show_card">
     <a href="/show/{{show}}" target="_blank" rel="noopener noreferrer" style="text-decoration: none;">
-      {{ show }}
+      <img src="/{{show}}/thumbnail.jpeg">
+      <div class="container">
+          {{ show }}
+      </div>
     </a>
   </div>
   {{/each}}
