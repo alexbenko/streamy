@@ -28,7 +28,8 @@ app.get("/show/:showName", async (req,res) =>{
   const { showName } = req.params;
   const showPath = path.join(__dirname, `./shows/${showName}`);
   const seasons = await fs.readdirSync(showPath);
-  const cleanedSeasons = seasons.filter(season => season !== '.DS_Store');
+  const cleanedSeasons = seasons.filter(season => !season.includes("."));
+
   const seasonsAndEpsiodes = [];
   for (const season of cleanedSeasons){
     const episodesInSeasonPath = path.join(__dirname, `./shows/${showName}/${season}`)
@@ -148,10 +149,15 @@ app.get("/shows/:showName/:season/:episode", async (req, res) => {
   });
 })
 
+app.get("/:showname/thumbnail.jpeg", async (req, res)=>{
+  const thumbnailPath = path.join(__dirname, `/shows/${req.params.showname}/thumbnail.jpeg`);
+  res.sendFile(thumbnailPath);
+})
+
 app.get("/", async (req,res) => {
   const showsPath = path.join(__dirname, './shows');
   const shows = await fs.readdirSync(showsPath);
-  const cleaned = shows.filter(show => show !== '.DS_Store')
+  const cleaned = shows.filter(show => !show.includes("."))
   const templateParams = {
     availableShows : cleaned,
   }
