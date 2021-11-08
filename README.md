@@ -14,3 +14,5 @@ simple nodejs streaming server. Should work on any browser. Let me know if it do
 </p>
 <p>  Example: rickandmorty/season_1/e_1</p>
 <p>Right now it only supports videos in .mp4 format.</p>
+<p>Put a file named <code>thumbnail.jpeg</code> in the show's directory to have a thumbnail displayed in the front end.</p>
+<p>Example: <code>rickandmorty/thumbnail.jpeg</code></p>
