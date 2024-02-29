@@ -68,6 +68,7 @@ const Index = () => {
             >
               <CardMedia
                 component="img"
+                sx={{ height: 350, objectFit: 'cover' }}
 
                 image={`${apiRootPath}/${show}/thumbnail.jpeg`}
                 alt={show}

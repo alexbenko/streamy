@@ -1,6 +1,7 @@
 import { useState } from 'react';
-import { Dialog, DialogTitle, DialogContent, Accordion, AccordionSummary, AccordionDetails, Typography } from '@mui/material';
+import { Dialog, DialogTitle, DialogContent, Accordion, AccordionSummary, AccordionDetails, Typography, Box, IconButton } from '@mui/material';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import CloseIcon from '@mui/icons-material/Close';
 import './EpisodeList.css'
 interface Episode {
   displayName: string;
@@ -40,15 +41,26 @@ const EpisodeList = ({ showName, seasonsAndEpisodes, apiRootPath }: EpisodeListP
           </AccordionSummary>
           <AccordionDetails>
             {season.episodes.map((episode, index) => (
-              <p key={index} onClick={() => handleEpisodeClick(episode.file)} style={{ cursor: 'pointer' }}>
+              <Typography
+                key={index}
+                onClick={() => handleEpisodeClick(episode.file)}
+                sx={{ cursor: 'pointer', '&:hover': { textDecoration: 'underline' } }}
+              >
                 {episode.displayName}
-              </p>
+              </Typography>
             ))}
           </AccordionDetails>
         </Accordion>
       ))}
       <Dialog open={!!selectedEpisode} onClose={handleClose}>
-        <DialogTitle>{selectedEpisode}</DialogTitle>
+        <DialogTitle>
+          <Box display="flex" justifyContent="space-between" alignItems="center">
+            <Typography variant="h6">{selectedEpisode}</Typography>
+            <IconButton edge="end" color="inherit" onClick={handleClose} aria-label="close">
+              <CloseIcon />
+            </IconButton>
+          </Box>
+        </DialogTitle>
         <DialogContent>
           <video
             src={`${apiRootPath}${selectedEpisode}`}
