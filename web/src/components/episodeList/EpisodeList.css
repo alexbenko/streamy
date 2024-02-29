@@ -1,0 +1,30 @@
+/* EpisodeList.css */
+
+.season {
+  padding-bottom: 100px;
+}
+
+.accordion {
+  background-color: #eee;
+  color: #444;
+  cursor: pointer;
+  padding: 18px;
+  width: 100%;
+  text-align: left;
+  border: none;
+  outline: none;
+  transition: 0.4s;
+}
+
+.accordion:hover {
+  background-color: #ccc;
+}
+
+.panel {
+  padding: 0 18px;
+  background-color: white;
+  display: none;
+  flex-direction: column;
+  overflow: hidden;
+  justify-content: space-evenly;
+}
