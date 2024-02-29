@@ -1,10 +1,13 @@
-{{#expect showName, seasonsAndEpsiodes }}
+{{#expect showName, seasonsAndEpsiodes,test }}
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Streamey - {{showName}}</title>
   <link rel="icon" type="image/svg" href="/favicon.svg">
   <style>
+    .season{
+      padding-bottom: 100px;
+    }
     .accordion {
       background-color: #eee;
       color: #444;
@@ -41,8 +44,9 @@
 </script>
 <div style="display: flex; flex-direction:column; justify-content:space-evenly;">
   <h2>{{showName}}</h2>
+
   {{#each seasonsAndEpsiodes as season}}
-    <div>
+    <div id="{{season.displayName}}" class="season">
       <button class="accordion">{{season.displayName}}</button>
       <div class="panel">
         {{#each season.episodes as episode}}

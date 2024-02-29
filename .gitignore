@@ -104,3 +104,6 @@ dist
 .tern-port
 
 /shows
+
+*/bundle.js
+static/bundle.js.LICENSE.txt
