@@ -1,0 +1,14 @@
+version: '3.8'
+
+services:
+  streamy:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "4200:4200"
+    environment:
+      NODE_ENV: production
+    volumes:
+      - ./shows:/shows
+    restart: always

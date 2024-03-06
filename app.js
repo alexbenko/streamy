@@ -6,8 +6,14 @@ const fs = require("fs");
 const app = express();
 const PORT = 4200;
 
-app.use(morgan('dev'));
+if (process.env.NODE_ENV === 'production') {
+  app.use(morgan('combined'));
+} else {
+  app.use(morgan('dev'));
+}
+
 app.use(express.static(path.join(__dirname, './static')))
+app.use(express.static(path.join(__dirname, './dist')))
 
 function capitalizeFirstLetter(string) {
   return string.charAt(0).toUpperCase() + string.slice(1);
