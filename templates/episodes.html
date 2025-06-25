@@ -1,0 +1,13 @@
+<!DOCTYPE html>
+<html>
+<head><title>{{ show }} {{ season }}</title></head>
+<body>
+  <h1>{{ show }} - {{ season }}</h1>
+  <ul>
+    {% for episode in episodes %}
+      <li><a href="/{{ show }}/{{ season }}/{{ episode }}">{{ episode }}</a></li>
+    {% endfor %}
+  </ul>
+  <a href="/{{ show }}">← Back to Seasons</a>
+</body>
+</html>

@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Library</title>
+  <style>
+    img {
+      width: 200px;
+      height: auto;
+      display: block;
+    }
+    .grid {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1em;
+    }
+    .item {
+      text-align: center;
+      width: 200px;
+    }
+  </style>
+</head>
+<body>
+  <h1>🎬 Movies</h1>
+  <div class="grid">
+    {% for movie in movies %}
+      <div class="item">
+        <a href="/Movies/{{ movie.name }}">
+          <div>{{ movie.name }}</div>
+        </a>
+      </div>
+    {% endfor %}
+  </div>
+
+  <h1>📺 Shows</h1>
+  <div class="grid">
+    {% for show in shows %}
+      <div class="item">
+        <a href="/{{ show.name }}">
+          <img src="{{ show.thumbnail }}" alt="{{ show.name }}">
+          <div>{{ show.name }}</div>
+        </a>
+      </div>
+    {% endfor %}
+  </div>
+</body>
+</html>
