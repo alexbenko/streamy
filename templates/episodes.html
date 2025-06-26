@@ -1,13 +1,18 @@
 <!DOCTYPE html>
 <html>
-<head><title>{{ show }} {{ season }}</title></head>
+<head><title>{{ show }}</title></head>
 <body>
-  <h1>{{ show }} - {{ season }}</h1>
+  <h1>{{ show }}</h1>
   <ul>
     {% for episode in episodes %}
-      <li><a href="/{{ show }}/{{ season }}/{{ episode }}">{{ episode }}</a></li>
+      <li>
+        <a href="{% if season %}/{{ show }}/{{ season }}/{{ episode }}{% else %}/{{ show }}/{{ episode }}{% endif %}">
+
+          {{ episode }}
+        </a>
+      </li>
     {% endfor %}
   </ul>
-  <a href="/{{ show }}">← Back to Seasons</a>
+  <a href="/">← Back</a>
 </body>
 </html>

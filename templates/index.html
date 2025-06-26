@@ -3,11 +3,6 @@
 <head>
   <title>Library</title>
   <style>
-    img {
-      width: 200px;
-      height: auto;
-      display: block;
-    }
     .grid {
       display: flex;
       flex-wrap: wrap;
@@ -17,27 +12,20 @@
       text-align: center;
       width: 200px;
     }
+    img {
+      width: 100%;
+      border-radius: 0.5em;
+    }
   </style>
 </head>
 <body>
-  <h1>🎬 Movies</h1>
+  <h1>📺 Library</h1>
   <div class="grid">
-    {% for movie in movies %}
+    {% for entry in entries %}
       <div class="item">
-        <a href="/Movies/{{ movie.name }}">
-          <div>{{ movie.name }}</div>
-        </a>
-      </div>
-    {% endfor %}
-  </div>
-
-  <h1>📺 Shows</h1>
-  <div class="grid">
-    {% for show in shows %}
-      <div class="item">
-        <a href="/{{ show.name }}">
-          <img src="{{ show.thumbnail }}" alt="{{ show.name }}">
-          <div>{{ show.name }}</div>
+        <a href="{% if entry.is_movie %}/Movies{% else %}/{{ entry.name }}{% endif %}">
+          <img src="{{ entry.thumbnail }}" alt="{{ entry.name }}">
+          <div>{{ entry.name }}</div>
         </a>
       </div>
     {% endfor %}
