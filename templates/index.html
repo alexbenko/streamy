@@ -1,34 +1,69 @@
-<!DOCTYPE html>
-<html>
-<head>
-  <title>Library</title>
+{% extends "base.html" %}
+
+
+{% block content %}
+
+  <h1>📺 Your Library</h1>
+  <div class="grid">
+    {% if entries|length == 0 %}
+      <p class="empty">No media found.</p>
+    {% endif %}
+    {% for entry in entries %}
+      <a class="card" href="/{{ entry.name }}">
+        <img src="{{ entry.thumbnail }}" alt="{{ entry.name }} thumbnail">
+        <div class="title">{{ entry.name }}</div>
+      </a>
+    {% endfor %}
+  </div>
+
+{% endblock %}
+
+{% block head %}
   <style>
     .grid {
       display: flex;
       flex-wrap: wrap;
-      gap: 1em;
+      gap: 1.5rem;
     }
-    .item {
-      text-align: center;
-      width: 200px;
+
+    .card {
+      width: 180px;
+      border: 1px solid var(--card-border);
+      border-radius: 8px;
+      background-color: var(--card-bg-light);
+      box-shadow: 0 1px 4px rgba(0,0,0,0.1);
+      overflow: hidden;
+      transition: transform 0.2s, box-shadow 0.2s;
+
     }
-    img {
+
+    .card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+    }
+
+    .card img {
       width: 100%;
-      border-radius: 0.5em;
+      height: 250px;
+      aspect-ratio: 16/9;
+      object-fit: cover;
+    }
+
+    .card .title {
+      padding: 0.75rem;
+      text-align: center;
+      font-weight: 500;
+    }
+
+    @media (prefers-color-scheme: dark) {
+      .card {
+        background-color: var(--card-bg-dark);
+      }
+    }
+
+    .empty {
+      font-style: italic;
+      opacity: 0.7;
     }
   </style>
-</head>
-<body>
-  <h1>📺 Library</h1>
-  <div class="grid">
-    {% for entry in entries %}
-      <div class="item">
-        <a href="{% if entry.is_movie %}/Movies{% else %}/{{ entry.name }}{% endif %}">
-          <img src="{{ entry.thumbnail }}" alt="{{ entry.name }}">
-          <div>{{ entry.name }}</div>
-        </a>
-      </div>
-    {% endfor %}
-  </div>
-</body>
-</html>
+{% endblock %}

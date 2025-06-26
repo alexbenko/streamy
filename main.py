@@ -11,10 +11,8 @@ MOVIES_DIR = SHOWS_DIR / "Movies"
 
 templates = Jinja2Templates(directory="templates")
 
-# Static mount (for serving thumbnails or other static assets)
 app.mount("/shows", StaticFiles(directory=SHOWS_DIR), name="shows")
 
-# ---------- ROUTES (ORDER MATTERS) ----------
 
 @app.get("/")
 def home(request: Request):

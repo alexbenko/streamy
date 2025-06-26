@@ -1,13 +1,60 @@
-<!DOCTYPE html>
-<html>
-<head><title>{{ show }} Seasons</title></head>
-<body>
-  <h1>{{ show }} - Seasons</h1>
-  <ul>
-    {% for season in seasons %}
-      <li><a href="/{{ show }}/{{ season }}">{{ season }}</a></li>
-    {% endfor %}
-  </ul>
-  <a href="/">← Back</a>
-</body>
-</html>
+{% extends "base.html" %}
+
+{% block title %}{{ show }} Seasons{% endblock %}
+
+{% block content %}
+  <h1>📺 {{ show }}</h1>
+  {% if seasons|length == 0 %}
+    <p class="empty">No seasons found.</p>
+  {% else %}
+    <ul class="list">
+      {% for season in seasons %}
+        <li>
+          <a href="/{{ show }}/{{ season }}">{{ season.replace('_', ' ') }}</a>
+        </li>
+      {% endfor %}
+    </ul>
+  {% endif %}
+  <p><a href="/">← Back to Library</a></p>
+{% endblock %}
+
+{% block head %}
+  <style>
+    .list {
+      list-style: none;
+      padding: 0;
+    }
+
+    .list li {
+      margin: 0.5rem 0;
+    }
+
+    .list a {
+      display: inline-block;
+      padding: 0.5rem 1rem;
+      background-color: var(--card-bg-light);
+      border: 1px solid var(--card-border);
+      border-radius: 6px;
+      transition: background-color 0.2s;
+    }
+
+    .list a:hover {
+      background-color: #ddd;
+    }
+
+    @media (prefers-color-scheme: dark) {
+      .list a {
+        background-color: var(--card-bg-dark);
+      }
+
+      .list a:hover {
+        background-color: #333;
+      }
+    }
+
+    .empty {
+      font-style: italic;
+      opacity: 0.7;
+    }
+  </style>
+{% endblock %}
