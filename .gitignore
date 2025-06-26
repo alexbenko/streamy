@@ -109,3 +109,5 @@ dist
 static/bundle.js.LICENSE.txt
 
 .vscode
+
+__pycache__/
