@@ -1,6 +1,9 @@
 # 🎬 FastAPI Media Server
 
 A lightweight, directory-based media server built with **FastAPI**, serving TV shows and movies directly from your file system. It supports streaming `.mp4` files with automatic thumbnail generation via `ffmpeg` and a modern dark-mode friendly UI — all without a database.
+<img width="1269" alt="Screenshot 2025-06-27 at 10 16 18 AM" src="https://github.com/user-attachments/assets/d0e65b90-4c4d-48a8-a871-f9112f78a9eb" />
+<img width="1406" alt="Screenshot 2025-06-27 at 10 16 37 AM" src="https://github.com/user-attachments/assets/afffd7b0-8ca9-40c3-9dbb-ad6bcff40278" />
+<img width="1488" alt="Screenshot 2025-06-27 at 10 17 35 AM" src="https://github.com/user-attachments/assets/ebafb656-8ecb-479f-b8de-9ddb31c8b05c" />
 
 ---
 
