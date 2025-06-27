@@ -212,7 +212,7 @@ def generate_thumb_if_missing(mp4_path: Path):
     cmd = [
         "ffmpeg",
         "-loglevel", "error",
-        "-ss", "00:01:55",
+        "-ss", "00:00:55",
         "-i", str(mp4_path),
         "-frames:v", "1",
         "-q:v", "2",
