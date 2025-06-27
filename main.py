@@ -3,7 +3,7 @@ from fastapi.responses import StreamingResponse
 from fastapi.templating import Jinja2Templates
 from fastapi.staticfiles import StaticFiles
 from pathlib import Path
-
+import subprocess
 app = FastAPI()
 BASE_DIR = Path(__file__).parent
 SHOWS_DIR = BASE_DIR / "shows"
@@ -181,6 +181,49 @@ def entry_page(entry_name: str, request: Request):
     })
 
 
+def generate_missing_thumbnails():
+    print("🔍 Scanning for missing thumbnails...")
+
+    for entry in SHOWS_DIR.iterdir():
+        if not entry.is_dir():
+            continue
+
+        # Handle movies
+        if entry.name.lower() == "movies":
+            for mp4 in entry.glob("*.mp4"):
+                generate_thumb_if_missing(mp4)
+            continue
+
+        # Handle shows with seasons
+        for season in entry.iterdir():
+            if not season.is_dir():
+                continue
+            for mp4 in season.glob("*.mp4"):
+                generate_thumb_if_missing(mp4)
+
+    print("✅ Thumbnail check complete.")
+
+def generate_thumb_if_missing(mp4_path: Path):
+    thumb_path = mp4_path.with_name(mp4_path.stem + "-thumbnail.jpg")
+    if thumb_path.exists():
+        return
+
+    print(f"🎞️  Generating thumbnail for: {mp4_path.relative_to(SHOWS_DIR.parent)}")
+    cmd = [
+        "ffmpeg",
+        "-loglevel", "error",
+        "-ss", "00:01:55",
+        "-i", str(mp4_path),
+        "-frames:v", "1",
+        "-q:v", "2",
+        str(thumb_path)
+    ]
+    try:
+        subprocess.run(cmd, check=True)
+    except subprocess.CalledProcessError:
+        print(f"⚠️ Failed to generate thumbnail for {mp4_path}")
+
 if __name__ == "__main__":
     import uvicorn
+    generate_missing_thumbnails()
     uvicorn.run(app, host="0.0.0.0", port=8000)
