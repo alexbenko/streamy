@@ -1,4 +1,6 @@
-from fastapi import FastAPI, Request, HTTPException, Response
+from fastapi import FastAPI, Request, HTTPException, Response, Form, UploadFile, File
+from fastapi.responses import RedirectResponse
+import shutil
 from fastapi.responses import StreamingResponse
 from fastapi.templating import Jinja2Templates
 from fastapi.staticfiles import StaticFiles
@@ -12,6 +14,20 @@ MOVIES_DIR = SHOWS_DIR / "Movies"
 templates = Jinja2Templates(directory="templates")
 
 app.mount("/shows", StaticFiles(directory=SHOWS_DIR), name="shows")
+def get_show_season_structure():
+    structure = {}
+    for show_dir in SHOWS_DIR.iterdir():
+        if show_dir.is_dir() and show_dir.name.lower() != "movies":
+            seasons = [season.name for season in show_dir.iterdir() if season.is_dir()]
+            structure[show_dir.name] = sorted(seasons)
+    return structure
+@app.get("/upload")
+def upload_page(request: Request):
+    show_structure = get_show_season_structure()
+    return templates.TemplateResponse("upload.html", {
+        "request": request,
+        "show_structure": show_structure
+    })
 
 
 @app.get("/")
@@ -180,6 +196,59 @@ def entry_page(entry_name: str, request: Request):
         "seasons": sorted(seasons)
     })
 
+
+
+
+@app.post("/upload")
+async def upload_handler(
+    request: Request,
+    type: str = Form(...),
+    movie_name: str = Form(None),
+    show_name: str = Form(None),
+    new_show: str = Form(None),
+    season: str = Form(None),
+    new_season: str = Form(None),
+    episode: str = Form(None),
+    video: UploadFile = Form(...),
+    thumb_time: int = Form(55),
+):
+    if type == "movie":
+        movie_dir = MOVIES_DIR
+        movie_dir.mkdir(parents=True, exist_ok=True)
+        dest_path = movie_dir / f"{movie_name}.mp4"
+        thumb_path = movie_dir / f"{movie_name}-thumbnail.jpeg"
+    elif type == "show":
+        final_show = new_show if show_name == "_new" else show_name
+        final_season = new_season if season == "_new" else season
+
+        if not final_show or not final_season or not episode:
+            raise HTTPException(status_code=400, detail="Missing show, season, or episode")
+
+        dest_dir = SHOWS_DIR / final_show / final_season
+        dest_dir.mkdir(parents=True, exist_ok=True)
+        dest_path = dest_dir / episode
+        thumb_path = dest_dir / f"{Path(episode).stem}-thumbnail.jpeg"
+    else:
+        raise HTTPException(status_code=400, detail="Invalid type")
+
+    # Save uploaded video
+    with dest_path.open("wb") as f:
+        shutil.copyfileobj(video.file, f)
+
+    # Generate thumbnail using ffmpeg
+    try:
+        subprocess.run([
+            "ffmpeg",
+            "-ss", str(thumb_time),
+            "-i", str(dest_path),
+            "-vframes", "1",
+            "-q:v", "2",
+            str(thumb_path)
+        ], check=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+    except subprocess.CalledProcessError:
+        print(f"Thumbnail generation failed for {dest_path}")
+
+    return RedirectResponse(url="/", status_code=303)
 
 def generate_missing_thumbnails():
     print("🔍 Scanning for missing thumbnails...")

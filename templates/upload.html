@@ -1,0 +1,130 @@
+{% extends "base.html" %}
+
+{% block title %}Upload Video{% endblock %}
+
+{% block content %}
+<h1 style="margin-bottom: 1rem;">📤 Upload Video</h1>
+
+<form id="upload-form" method="post" action="/upload" enctype="multipart/form-data" style="max-width: 600px; margin: auto; display: flex; flex-direction: column; gap: 1rem;">
+  <label>
+    Upload Type:
+    <select name="type" onchange="toggleFields(this.value)">
+      <option value="movie">Movie</option>
+      <option value="show">Show</option>
+    </select>
+  </label>
+
+  <div id="movie-fields">
+    <label>
+      Movie Name:
+      <input type="text" name="movie_name">
+    </label>
+  </div>
+
+  <div id="show-fields" style="display:none">
+    <label>
+      Show:
+      <select name="show_name" id="show-select">
+        {% for show in show_structure %}
+        <option value="{{ show }}">{{ show }}</option>
+        {% endfor %}
+      </select>
+    </label>
+
+    <label>
+      Season:
+      <select name="season" id="season-select">
+        {% for season in show_structure[show_structure|first] %}
+        <option value="{{ season }}">{{ season }}</option>
+        {% endfor %}
+      </select>
+    </label>
+
+    <label>
+      Episode Filename (e.g. ep1.mp4):
+      <input type="text" name="episode">
+    </label>
+  </div>
+
+  <label>
+    Video File:
+    <input type="file" name="video">
+  </label>
+
+  <label>
+    Thumbnail Time (seconds):
+    <input type="number" name="thumb_time" value="55" min="1">
+  </label>
+
+  <button type="submit" style="padding: 0.5rem 1rem;">Upload</button>
+  <progress id="upload-progress" value="0" max="100" style="width: 100%; display: none; height: 1rem;"></progress>
+</form>
+
+<script>
+function toggleFields(value) {
+  const movieFields = document.getElementById("movie-fields");
+  const showFields = document.getElementById("show-fields");
+  const episodeInput = document.querySelector("input[name='episode']");
+
+  const isMovie = value === "movie";
+  movieFields.style.display = isMovie ? "block" : "none";
+  showFields.style.display = isMovie ? "none" : "block";
+
+  if (episodeInput) {
+    if (isMovie) {
+      episodeInput.removeAttribute("required");
+    } else {
+      episodeInput.setAttribute("required", "required");
+    }
+  }
+}
+
+const showSelect = document.getElementById("show-select");
+const seasonSelect = document.getElementById("season-select");
+const showData = {{ show_structure | tojson }};
+
+showSelect?.addEventListener("change", function() {
+  const selectedShow = this.value;
+  const seasons = showData[selectedShow] || [];
+  seasonSelect.innerHTML = "";
+  seasons.forEach((season) => {
+    const option = document.createElement("option");
+    option.value = season;
+    option.textContent = season;
+    seasonSelect.appendChild(option);
+  });
+});
+
+const form = document.getElementById("upload-form");
+const progressBar = document.getElementById("upload-progress");
+
+form.addEventListener("submit", function(event) {
+  event.preventDefault();
+  const formData = new FormData(form);
+  const xhr = new XMLHttpRequest();
+
+  xhr.open("POST", "/upload", true);
+
+  xhr.upload.onprogress = function(event) {
+    if (event.lengthComputable) {
+      const percent = (event.loaded / event.total) * 100;
+      progressBar.style.display = "block";
+      progressBar.value = percent - 2;
+    }
+  };
+
+  xhr.onload = function() {
+    if (xhr.status === 200) {
+      alert("Upload successful!");
+      progressBar.value = 0;
+      progressBar.style.display = "none";
+      form.reset();
+    } else {
+      alert("Upload failed.");
+    }
+  };
+
+  xhr.send(formData);
+});
+</script>
+{% endblock %}
